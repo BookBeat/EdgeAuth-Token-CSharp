@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace EdgeAuthToken
+namespace BookBeat.Akamai.EdgeAuthToken
 {
     public interface IAkamaiTokenConfig
     {

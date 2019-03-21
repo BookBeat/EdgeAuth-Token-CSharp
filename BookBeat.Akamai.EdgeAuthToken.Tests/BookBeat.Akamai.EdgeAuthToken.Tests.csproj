@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EdgeAuthToken\EdgeAuthToken.csproj" />
+    <ProjectReference Include="..\BookBeat.Akamai.EdgeAuthToken\BookBeat.Akamai.EdgeAuthToken.csproj" />
   </ItemGroup>
 
 </Project>

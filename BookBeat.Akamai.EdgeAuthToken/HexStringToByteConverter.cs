@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EdgeAuthToken
+namespace BookBeat.Akamai.EdgeAuthToken
 {
     internal static class HexStringToByteConverter
     {

@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EdgeAuthToken
+namespace BookBeat.Akamai.EdgeAuthToken
 {
     public interface IAkamaiTokenGenerator
     {

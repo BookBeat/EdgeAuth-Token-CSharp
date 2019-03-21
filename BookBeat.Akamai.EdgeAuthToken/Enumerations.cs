@@ -1,6 +1,6 @@
 ﻿//using System.Linq;
 
-namespace EdgeAuthToken
+namespace BookBeat.Akamai.EdgeAuthToken
 {
     /// <summary>
     /// Enumeration of all supported HMAC algorithms

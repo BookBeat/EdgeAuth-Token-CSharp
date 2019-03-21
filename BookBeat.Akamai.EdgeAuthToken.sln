@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeAuthToken", "EdgeAuthToken\EdgeAuthToken.csproj", "{2E0F78ED-299A-4AE4-9498-A713C39543D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookBeat.Akamai.EdgeAuthToken", "BookBeat.Akamai.EdgeAuthToken\BookBeat.Akamai.EdgeAuthToken.csproj", "{2E0F78ED-299A-4AE4-9498-A713C39543D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeAuthToken.Tests", "EdgeAuthToken.Tests\EdgeAuthToken.Tests.csproj", "{33327802-346D-46CA-B8E1-8E2347EBED72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookBeat.Akamai.EdgeAuthToken.Tests", "BookBeat.Akamai.EdgeAuthToken.Tests\BookBeat.Akamai.EdgeAuthToken.Tests.csproj", "{33327802-346D-46CA-B8E1-8E2347EBED72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

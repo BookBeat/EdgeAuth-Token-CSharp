@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace EdgeAuthToken.Tests
+namespace BookBeat.Akamai.EdgeAuthToken.Tests
 {
     public class TokenAuthTests
     {
