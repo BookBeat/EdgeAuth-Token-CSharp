@@ -8,3 +8,9 @@ test_script:
     dotnet test EdgeAuthToken.Tests\EdgeAuthToken.Tests.csproj --logger:Appveyor
 artifacts:
 - path: '**\bin\Release\*.nupkg'
+deploy:
+- provider: NuGet
+  api_key:
+    secure: Y4Xs2fUHf8VLuWaLjv994vLx3qQZ1qAiFW7NKfg7wuq7OtmOWCpVgzYACiXN1x/s
+  on:
+    branch: master
