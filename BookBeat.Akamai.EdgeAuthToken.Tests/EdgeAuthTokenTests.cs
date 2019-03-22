@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace BookBeat.Akamai.EdgeAuthToken.Tests
 {
-    public class TokenAuthTests
+    public class EdgeAuthTokenTests
     {
         private IAkamaiTokenGenerator _tokenGenerator;
         private IAkamaiTokenConfig _tokenConfig;
