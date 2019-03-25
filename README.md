@@ -1,5 +1,5 @@
 # EdgeAuth-Token-CSharp: Akamai Edge Authorization Token Generator for C#
-[![Build status](https://ci.appveyor.com/api/projects/status/6kut5wktspt8nhf5/branch/master?svg=true)](https://ci.appveyor.com/project/NiklasArbin/knightbus/branch/master) 
+[![Build status](https://ci.appveyor.com/api/projects/status/hopwxb40ykjauh9m/branch/master?svg=true)](https://ci.appveyor.com/project/NiklasArbin/edgeauth-token-csharp/branch/master)
 [![NuGet](https://img.shields.io/nuget/v/BookBeat.Akamai.EdgeAuthToken.svg)](https://github.com/BookBeat/EdgeAuth-Token-CSharp/)
 
 EdgeAuth-Token-CSharp is an Akamai Edge Authorization Token generator library for .Net Standard. Test Project runs on .Net Core. 
@@ -23,7 +23,7 @@ using BookBeat.Akamai.EdgeAuthToken;
 
 namespace MyNamespace
 {
-    class MyTokenGenerator
+    public class MyTokenGenerator
     {
         public string GenerateMyToken(long startTime, long window, string acl, string key)
         {
