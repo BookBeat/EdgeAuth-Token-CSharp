@@ -6,6 +6,11 @@ namespace BookBeat.Akamai.EdgeAuthToken
     public interface IAkamaiTokenConfig
     {
         /// <summary>
+        /// UnixTimeProvider is implemented for testability
+        /// </summary>
+        IUnixTimeProvider UnixTimeProvider { get; set; }
+
+        /// <summary>
         /// Gets/sets a flag that indicates whether the Acl property will be escaped before being hashed. The default behavior is to escape the value.
         /// </summary>
         /// <remarks>This flag supports the new feature in GHost 6.5 wherein the EdgeAuth 2.0 token is 
@@ -72,7 +77,7 @@ namespace BookBeat.Akamai.EdgeAuthToken
     public class AkamaiTokenConfig : IAkamaiTokenConfig
     {
         private static readonly Regex KeyRegex = new Regex("^[a-zA-Z0-9]+$", RegexOptions.Compiled);
-
+        
         public AkamaiTokenConfig()
         {
             TokenAlgorithm = Algorithm.HMACSHA256;
@@ -82,6 +87,11 @@ namespace BookBeat.Akamai.EdgeAuthToken
             FieldDelimiter = '~';
         }
 
+        /// <summary>
+        /// UnixTimeProvider is implemented for testability
+        /// </summary>
+        public IUnixTimeProvider UnixTimeProvider { get; set; } = new UnixTimeProvider();
+        
         /// <summary>
         /// Gets/sets a flag that indicates whether the Acl property will be escaped before being hashed. The default behavior is to escape the value.
         /// </summary>
@@ -110,18 +120,21 @@ namespace BookBeat.Akamai.EdgeAuthToken
             }
         }
 
-        private long _startTime;
-
         /// <summary>
         /// Gets/sets the epoch time, i.e. seconds since 1/1/1970, from which the token is valid. Default value is current time
         /// </summary>
-        public long StartTime
-        {
-            get => _startTime == 0 ? DateTimeOffset.Now.ToUnixTimeSeconds() : _startTime;
-            set => _startTime = value;
-        }
+        public long StartTime { get; set; }
 
-        public string StartTimeField => $"st={StartTime}{FieldDelimiter}";
+        public string StartTimeField
+        {
+            get
+            {
+                if (StartTime == 0)
+                    return string.Empty;
+                else
+                    return $"st={StartTime}{FieldDelimiter}";
+            }
+        }
 
         /// <summary>
         /// Gets/sets the epoch time, i.e. seconds since 1/1/1970, till which the token is valid.
@@ -150,7 +163,7 @@ namespace BookBeat.Akamai.EdgeAuthToken
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value), "Value should be greater than 0");
-
+                
                 _window = value;
             }
         }
@@ -169,7 +182,7 @@ namespace BookBeat.Akamai.EdgeAuthToken
                 }
 
                 return EndTime == 0
-                    ? $"exp={(StartTime + Window)}{FieldDelimiter}"
+                    ? $"exp={(StartTime == 0 ? UnixTimeProvider.GetUnixTimeSeconds() : StartTime) + Window}{FieldDelimiter}"
                     : $"exp={EndTime}{FieldDelimiter}";
             }
         }
@@ -226,18 +239,6 @@ namespace BookBeat.Akamai.EdgeAuthToken
         /// Character used to delimit token body fields.
         /// </summary>
         public char FieldDelimiter { get; set; }
-
-        private void ValidateAcl()
-        {
-            if (string.IsNullOrEmpty(Acl))
-            {
-                throw new Exception("A valid value for 'Acl' is required");
-            }
-            if (string.IsNullOrEmpty(Acl) == false)
-            {
-                throw new Exception("The 'Acl' value can be specified");
-            }
-        }
 
         public override string ToString()
         {

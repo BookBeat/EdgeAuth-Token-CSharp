@@ -12,7 +12,7 @@ namespace BookBeat.Akamai.EdgeAuthToken.Tests
         public void Setup()
         {
             _tokenGenerator = new AkamaiTokenGenerator();
-            _tokenConfig = new AkamaiTokenConfig();
+            _tokenConfig = new AkamaiTokenConfig { UnixTimeProvider = new UnixTimeFaker(DateTimeOffset.Now) };
         }
 
         [TestCase(1294788122, 86400, "/*", "abc123")]
@@ -32,17 +32,39 @@ namespace BookBeat.Akamai.EdgeAuthToken.Tests
             var token = _tokenGenerator.GenerateToken(_tokenConfig);
 
             // Assert
-
             var expectedParams = $"st={_tokenConfig.StartTime}~exp={_tokenConfig.StartTime + _tokenConfig.Window}~acl={_tokenConfig.Acl}~";
             var actualParams = token.Substring(0, token.IndexOf("hmac=", StringComparison.InvariantCulture));
-            var hmac = token.Substring(token.IndexOf("hmac=", StringComparison.InvariantCulture));
+            var hmac = token.Substring(token.IndexOf("hmac=", StringComparison.InvariantCulture) + "hmac=".Length);
 
             Assert.AreEqual(expectedParams, actualParams);
             Assert.IsTrue(hmac.Length > 0);
         }
 
         [Test]
-        public void InstantiateConfigWithNoStartTime_VerifyDefaultStartTimeIsSet()
+        public void GetBasicTokenWithNoStartTime_ExpectCorrectParams()
+        {
+            // Arrange 
+            _tokenConfig = new AkamaiTokenConfig
+            {
+                Window = 600,
+                Acl = "/*",
+                Key = "key123"
+            };
+
+            // Act
+            var token = _tokenGenerator.GenerateToken(_tokenConfig);
+
+            // Assert
+            var expectedParams = $"exp={_tokenConfig.UnixTimeProvider.GetUnixTimeSeconds() + _tokenConfig.Window}~acl={_tokenConfig.Acl}~";
+            var actualParams = token.Substring(0, token.IndexOf("hmac=", StringComparison.InvariantCulture));
+            var hmac = token.Substring(token.IndexOf("hmac=", StringComparison.InvariantCulture) + "hmac=".Length);
+
+            Assert.AreEqual(expectedParams, actualParams);
+            Assert.IsTrue(hmac.Length > 0);
+        }
+
+        [Test]
+        public void InstantiateConfigWithNoStartTime_VerifyExpiryFieldHasValue()
         {
             // Arrange / Act
             _tokenConfig = new AkamaiTokenConfig
@@ -54,7 +76,12 @@ namespace BookBeat.Akamai.EdgeAuthToken.Tests
             };
 
             // Assert
-            Assert.AreNotEqual(0, _tokenConfig.StartTime);
+            var startIndex = _tokenConfig.ExpirationField.IndexOf('=', StringComparison.InvariantCulture) + 1;
+            var lastIndex = _tokenConfig.ExpirationField.IndexOf('~', StringComparison.InvariantCulture);
+            var expiryTime = long.Parse(_tokenConfig.ExpirationField.Substring(startIndex, lastIndex - startIndex));
+            
+            Assert.AreEqual(string.Empty, _tokenConfig.StartTimeField);
+            Assert.AreEqual(expiryTime, _tokenConfig.UnixTimeProvider.GetUnixTimeSeconds() +_tokenConfig.Window);
         }
 
         [Test]

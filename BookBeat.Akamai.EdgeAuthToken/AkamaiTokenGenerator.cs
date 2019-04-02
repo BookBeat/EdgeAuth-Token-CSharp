@@ -26,16 +26,15 @@ namespace BookBeat.Akamai.EdgeAuthToken
         /// <returns></returns>
         public string GenerateToken(IAkamaiTokenConfig tokenConfig)
         {
-            var mToken = tokenConfig.IpField + tokenConfig.StartTimeField
+            var tokenValues = tokenConfig.IpField + tokenConfig.StartTimeField
                 + tokenConfig.ExpirationField + tokenConfig.AclField
                 + tokenConfig.SessionIdField + tokenConfig.PayloadField;
-            
-            // calculate hmac
-            var hmac = CalculateHMAC(mToken.TrimEnd(tokenConfig.FieldDelimiter), tokenConfig.Key, tokenConfig.TokenAlgorithm);
+
+            var hmac = CalculateHMAC(tokenValues.TrimEnd(tokenConfig.FieldDelimiter), tokenConfig.Key, tokenConfig.TokenAlgorithm);
 
             return tokenConfig.PreEscapeAcl
-                ? $"{mToken}hmac={hmac}"
-                : Uri.EscapeUriString($"{mToken}hmac={hmac}");
+                ? $"{tokenValues}hmac={hmac}"
+                : Uri.EscapeUriString($"{tokenValues}hmac={hmac}");
         }
 
         private string CalculateHMAC(string data, string key, Algorithm algorithm)
